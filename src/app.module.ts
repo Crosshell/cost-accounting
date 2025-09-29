@@ -1,8 +1,16 @@
 import { Module } from '@nestjs/common';
 import { HealthcheckModule } from './healthcheck/healthcheck.module';
+import { ConfigModule } from '@nestjs/config';
+import config from './config/config';
 
 @Module({
-  imports: [HealthcheckModule],
+  imports: [
+    ConfigModule.forRoot({
+      load: [config],
+      isGlobal: true,
+    }),
+    HealthcheckModule,
+  ],
   controllers: [],
   providers: [],
 })
