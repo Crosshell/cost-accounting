@@ -1,20 +1,25 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const config = new DocumentBuilder()
+  const configService = app.get(ConfigService);
+  const port = configService.getOrThrow<number>('port');
+
+  const swaggerConfig = new DocumentBuilder()
     .setTitle('Cost accounting docs')
     .setDescription('')
     .setVersion('1.0')
     .build();
 
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  const documentFactory = () =>
+    SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('docs', app, documentFactory);
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(port);
 }
 
 bootstrap();
