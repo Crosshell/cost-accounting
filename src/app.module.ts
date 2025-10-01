@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { HealthcheckModule } from './healthcheck/healthcheck.module';
 import { ConfigModule } from '@nestjs/config';
+import { UserModule } from './user/user.module';
 import config from './config/config';
 
 @Module({
@@ -10,6 +11,7 @@ import config from './config/config';
       isGlobal: true,
     }),
     HealthcheckModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],
