@@ -19,7 +19,7 @@ export class UserService {
     return this.repository.deleteById(id);
   }
 
-  getAll() {
+  getAll(): User[] {
     return this.repository.getAll();
   }
 }
