@@ -1,6 +1,8 @@
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UserRepository {
   private users: User[] = [];
 
