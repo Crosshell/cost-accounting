@@ -3,7 +3,7 @@ A Node.js application for managing and tracking cost accounting data
 
 ## Endpoint docs
 Interactive API documentation is available at:
-`http://localhost:{PORT}/docs`
+`https://cost-accounting-l2g6.onrender.com/docs`
 
 ## Prerequisites
 
@@ -80,4 +80,4 @@ Once the application is running, you can access the API:
 curl http://localhost:8070/healthcheck
 ```
 
-For detailed API documentation, visit `http://localhost:8070/docs`
+For detailed API documentation, visit `https://cost-accounting-l2g6.onrender.com/docs`
