@@ -7,7 +7,19 @@ import { UserRepository } from './user.repository';
 export class UserService {
   constructor(readonly repository: UserRepository) {}
 
+  getById(id: string): User | string {
+    return this.repository.getById(id);
+  }
+
   create(dto: CreateUserDto): User {
     return this.repository.create(dto);
+  }
+
+  deleteById(id: string): string {
+    return this.repository.deleteById(id);
+  }
+
+  getAll() {
+    return this.repository.getAll();
   }
 }

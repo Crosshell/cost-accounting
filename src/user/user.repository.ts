@@ -14,4 +14,29 @@ export class UserRepository {
 
     return user;
   }
+
+  getAll(): User[] {
+    return this.users;
+  }
+
+  getById(id: string): User | string {
+    const user = this.users.find((user) => user.id == id);
+
+    if (!user) {
+      return `User with id: ${id} not found`;
+    }
+
+    return user;
+  }
+
+  deleteById(id: string): string {
+    const userIndex = this.users.findIndex((user) => user.id == id);
+
+    if (userIndex !== -1) {
+      this.users.splice(userIndex, 1);
+      return 'User deleted successfully';
+    }
+
+    return `User with id: ${id} not found`;
+  }
 }

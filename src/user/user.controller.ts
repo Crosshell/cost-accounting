@@ -8,10 +8,14 @@ export class UserController {
   constructor(private readonly service: UserService) {}
 
   @Get('user/:id')
-  getById(@Param('id') id: string) {}
+  getById(@Param('id') id: string): User | string {
+    return this.service.getById(id);
+  }
 
   @Delete('user/:id')
-  deleteById(@Param('id') id: string) {}
+  deleteById(@Param('id') id: string): User | string {
+    return this.service.deleteById(id);
+  }
 
   @Post('user')
   create(@Body() dto: CreateUserDto): User {
@@ -19,5 +23,7 @@ export class UserController {
   }
 
   @Get('users')
-  getAll() {}
+  getAll(): User[] {
+    return this.service.getAll();
+  }
 }
