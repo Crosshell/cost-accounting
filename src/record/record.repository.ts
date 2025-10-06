@@ -24,8 +24,8 @@ export class RecordRepository {
   find(dto: FindRecordsDto): Record[] {
     return this.records.filter(
       (r) =>
-        (dto.userId === undefined || r.userId === dto.userId) &&
-        (dto.categoryId === undefined || r.categoryId === dto.categoryId),
+        (dto.userId == undefined || r.userId == dto.userId) &&
+        (dto.categoryId == undefined || r.categoryId == dto.categoryId),
     );
   }
 
