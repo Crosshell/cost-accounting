@@ -1,10 +1,6 @@
 # Cost Accounting
 A Node.js application for managing and tracking cost accounting data
 
-## Endpoint docs
-Interactive API documentation is available at:
-https://cost-accounting-l2g6.onrender.com/docs
-
 ## Prerequisites
 
 Choose one of the following options:
@@ -79,5 +75,3 @@ Once the application is running, you can access the API:
 # Example: Health check
 curl http://localhost:8070/healthcheck
 ```
-
-For detailed API documentation, visit https://cost-accounting-l2g6.onrender.com/docs
