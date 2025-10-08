@@ -1,51 +1,33 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { Prisma, Record } from '@prisma/client';
 import { CreateRecordDto } from './dto/create-record.dto';
-import { Record } from './entities/record';
-import { FindRecordsDto } from './dto/find-records.dto';
 
 @Injectable()
 export class RecordRepository {
-  private records: Record[] = [];
+  constructor(private readonly prisma: PrismaService) {}
 
-  create(dto: CreateRecordDto): Record {
-    const record: Record = {
-      id: this.records.length + 1,
-      userId: dto.userId,
-      categoryId: dto.categoryId,
-      amount: dto.amount ?? 0,
-      createdAt: new Date(),
-    };
+  async create(dto: CreateRecordDto): Promise<Record> {
+    const { userId, categoryId, ...data } = dto;
 
-    this.records.push(record);
-
-    return record;
+    return this.prisma.record.create({
+      data: {
+        ...data,
+        user: { connect: { id: userId } },
+        category: { connect: { id: categoryId } },
+      },
+    });
   }
 
-  find(dto: FindRecordsDto): Record[] {
-    return this.records.filter(
-      (r) =>
-        (dto.userId == undefined || r.userId == dto.userId) &&
-        (dto.categoryId == undefined || r.categoryId == dto.categoryId),
-    );
+  async findMany(where: Prisma.RecordWhereInput): Promise<Record[]> {
+    return this.prisma.record.findMany({ where });
   }
 
-  deleteById(id: string): string {
-    const recordIndex = this.records.findIndex((record) => record.id == id);
-    if (recordIndex !== -1) {
-      this.records.splice(recordIndex, 1);
-      return 'Category deleted successfully';
-    }
-
-    return `Category with id: ${id} not found`;
+  async delete(where: Prisma.RecordWhereUniqueInput): Promise<Record> {
+    return this.prisma.record.delete({ where });
   }
 
-  getById(id: string): Record | string {
-    const record = this.records.find((record) => record.id == id);
-
-    if (!record) {
-      return `Record with id: ${id} not found`;
-    }
-
-    return record;
+  async findOne(where: Prisma.RecordWhereUniqueInput): Promise<Record | null> {
+    return this.prisma.record.findUnique({ where });
   }
 }
