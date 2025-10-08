@@ -1,11 +1,7 @@
 import { IsOptional, IsUUID } from 'class-validator';
 
-export class FindRecordsDto {
+export class FindCategoriesDto {
   @IsOptional()
   @IsUUID()
   userId?: string;
-
-  @IsOptional()
-  @IsUUID()
-  categoryId?: string;
 }
