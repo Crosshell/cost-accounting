@@ -1,25 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './entities/user';
+import { User } from '@prisma/client';
 import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
   constructor(readonly repository: UserRepository) {}
 
-  getById(id: string): User | string {
-    return this.repository.getById(id);
+  async findOne(id: string): Promise<User> {
+    const user = await this.repository.findOne({ id });
+
+    if (!user) {
+      throw new NotFoundException(`User with id: ${id} not found`);
+    }
+
+    return user;
   }
 
-  create(dto: CreateUserDto): User {
+  async create(dto: CreateUserDto): Promise<User> {
     return this.repository.create(dto);
   }
 
-  deleteById(id: string): string {
-    return this.repository.deleteById(id);
+  async delete(id: string): Promise<User> {
+    const user = await this.repository.findOne({ id });
+
+    if (!user) {
+      throw new BadRequestException(`User with id: ${id} not found`);
+    }
+
+    return this.repository.delete({ id });
   }
 
-  getAll(): User[] {
+  async getAll(): Promise<User[]> {
     return this.repository.getAll();
   }
 }

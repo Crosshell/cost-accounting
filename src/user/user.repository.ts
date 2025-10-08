@@ -1,44 +1,24 @@
-import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './entities/user';
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class UserRepository {
-  private users: User[] = [];
+  constructor(private readonly prisma: PrismaService) {}
 
-  create(dto: CreateUserDto): User {
-    const user: User = {
-      id: this.users.length + 1,
-      name: dto.name,
-    };
-
-    this.users.push(user);
-
-    return user;
+  async create(data: Prisma.UserCreateInput): Promise<User> {
+    return this.prisma.user.create({ data });
   }
 
-  getAll(): User[] {
-    return this.users;
+  async getAll(): Promise<User[]> {
+    return this.prisma.user.findMany();
   }
 
-  getById(id: string): User | string {
-    const user = this.users.find((user) => user.id == id);
-
-    if (!user) {
-      return `User with id: ${id} not found`;
-    }
-
-    return user;
+  async findOne(where: Prisma.UserWhereUniqueInput): Promise<User | null> {
+    return this.prisma.user.findUnique({ where });
   }
 
-  deleteById(id: string): string {
-    const userIndex = this.users.findIndex((user) => user.id == id);
-
-    if (userIndex !== -1) {
-      this.users.splice(userIndex, 1);
-      return 'User deleted successfully';
-    }
-
-    return `User with id: ${id} not found`;
+  async delete(where: Prisma.UserWhereUniqueInput): Promise<User> {
+    return this.prisma.user.delete({ where });
   }
 }
