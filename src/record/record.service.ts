@@ -1,29 +1,45 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { RecordRepository } from './record.repository';
 import { CreateRecordDto } from './dto/create-record.dto';
-import { Record } from './entities/record';
 import { FindRecordsDto } from './dto/find-records.dto';
+import { Record } from '@prisma/client';
 
 @Injectable()
 export class RecordService {
   constructor(private readonly repository: RecordRepository) {}
 
-  create(dto: CreateRecordDto): Record {
+  async create(dto: CreateRecordDto): Promise<Record> {
     return this.repository.create(dto);
   }
 
-  find(dto: FindRecordsDto): Record[] {
+  async findMany(dto: FindRecordsDto): Promise<Record[]> {
     if (!dto.userId && !dto.categoryId) {
       throw new BadRequestException('userId or categoryId is required');
     }
-    return this.repository.find(dto);
+
+    return this.repository.findMany(dto);
   }
 
-  deleteById(id: string): string {
-    return this.repository.deleteById(id);
+  async delete(id: string): Promise<Record> {
+    const record = await this.repository.findOne({ id });
+
+    if (!record) {
+      throw new BadRequestException(`Record with id: ${id} not found`);
+    }
+    return this.repository.delete({ id });
   }
 
-  getById(id: string): Record | string {
-    return this.repository.getById(id);
+  async findOne(id: string): Promise<Record> {
+    const record = await this.repository.findOne({ id });
+
+    if (!record) {
+      throw new NotFoundException(`Record with id: ${id} not found`);
+    }
+
+    return record;
   }
 }

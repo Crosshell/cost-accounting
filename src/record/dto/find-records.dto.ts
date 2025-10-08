@@ -1,4 +1,11 @@
+import { IsOptional, IsUUID } from 'class-validator';
+
 export class FindRecordsDto {
-  userId: number | string;
-  categoryId: number | string;
+  @IsOptional()
+  @IsUUID()
+  userId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  categoryId?: string;
 }

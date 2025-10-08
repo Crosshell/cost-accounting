@@ -9,7 +9,10 @@ datasource db {
 
 model User {
   id   String @id @default(uuid())
-  name String
+  name String @unique
+
+  records          Record[]
+  customCategories Category[]
 
   @@map("users")
 }
@@ -18,5 +21,24 @@ model Category {
   id   String @id @default(uuid())
   name String
 
+  records Record[]
+
+  userId String? @map("user_id")
+  user   User?   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
   @@map("categories")
+}
+
+model Record {
+  id        String   @id @default(uuid())
+  amount    Int
+  createdAt DateTime @default(now()) @map("created_at")
+
+  userId     String @map("user_id")
+  categoryId String @map("category_id")
+
+  user     User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@map("records")
 }
