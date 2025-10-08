@@ -7,12 +7,27 @@ import { RecordRepository } from './record.repository';
 import { CreateRecordDto } from './dto/create-record.dto';
 import { FindRecordsDto } from './dto/find-records.dto';
 import { Record } from '@prisma/client';
+import { CategoryService } from '../category/category.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class RecordService {
-  constructor(private readonly repository: RecordRepository) {}
+  constructor(
+    private readonly repository: RecordRepository,
+    private readonly categoryService: CategoryService,
+    private readonly userService: UserService,
+  ) {}
 
   async create(dto: CreateRecordDto): Promise<Record> {
+    await this.userService.findOne(dto.userId);
+    const category = await this.categoryService.findOne(dto.categoryId);
+
+    if (category.userId && category.userId !== dto.userId) {
+      throw new BadRequestException(
+        `Category with id: ${dto.categoryId} belongs to another user`,
+      );
+    }
+
     return this.repository.create(dto);
   }
 
