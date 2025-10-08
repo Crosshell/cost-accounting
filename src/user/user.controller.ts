@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { User } from '@prisma/client';
@@ -8,12 +16,12 @@ export class UserController {
   constructor(private readonly service: UserService) {}
 
   @Get('user/:id')
-  async findOne(@Param('id') id: string): Promise<User> {
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<User> {
     return this.service.findOne(id);
   }
 
   @Delete('user/:id')
-  async delete(@Param('id') id: string): Promise<User> {
+  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<User> {
     return this.service.delete(id);
   }
 
