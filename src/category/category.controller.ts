@@ -6,18 +6,20 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { Category } from '@prisma/client';
+import { FindCategoriesDto } from './dto/find-categories.dto';
 
 @Controller('category')
 export class CategoryController {
   constructor(private readonly service: CategoryService) {}
 
   @Get()
-  async getAll(): Promise<Category[]> {
-    return this.service.getAll();
+  async findMany(@Query() dto: FindCategoriesDto): Promise<Category[]> {
+    return this.service.findMany(dto);
   }
 
   @Get(':id')

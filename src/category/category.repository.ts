@@ -6,8 +6,8 @@ import { PrismaService } from '../prisma/prisma.service';
 export class CategoryRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getAll(): Promise<Category[]> {
-    return this.prisma.category.findMany();
+  async findMany(where: Prisma.CategoryWhereInput): Promise<Category[]> {
+    return this.prisma.category.findMany({ where });
   }
 
   async findOne(
