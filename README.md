@@ -1,8 +1,11 @@
-# Cost Accounting
+# Cost Accounting v3.0.0
 A Node.js application for managing and tracking cost accounting data
 
-## Prerequisites
+## Lab Assignment Variant
+- <b>Calculation:</b> `32 mod 3 = 2`
+- <b>Variant: 2. Custom Expense Categories</b>
 
+## Prerequisites
 Choose one of the following options:
 
 ### Option 1: Local Development
