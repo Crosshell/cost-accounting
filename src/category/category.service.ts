@@ -2,13 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CategoryRepository } from './category.repository';
 import { Category } from '@prisma/client';
 import { CreateCategoryDto } from './dto/create-category.dto';
+import { FindCategoriesDto } from './dto/find-categories.dto';
 
 @Injectable()
 export class CategoryService {
   constructor(private readonly repository: CategoryRepository) {}
 
-  async getAll(): Promise<Category[]> {
-    return this.repository.getAll();
+  async findMany(dto: FindCategoriesDto): Promise<Category[]> {
+    return this.repository.findMany({ userId: dto.userId ?? null });
   }
 
   async findOne(id: string): Promise<Category> {
