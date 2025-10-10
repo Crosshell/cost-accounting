@@ -7,10 +7,15 @@ import { UserRepository } from './user.repository';
 import { RegisterDto } from '../auth/dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import { UserWithoutPassword } from './types/user-without-password';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
   constructor(readonly repository: UserRepository) {}
+
+  async findOneWithPassword(id: string): Promise<User | null> {
+    return this.repository.findOneWithPassword({ id });
+  }
 
   async findOne(id: string): Promise<UserWithoutPassword> {
     const user = await this.repository.findOne({ id });

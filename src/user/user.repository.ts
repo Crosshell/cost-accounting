@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { UserWithoutPassword } from './types/user-without-password';
 
 @Injectable()
@@ -19,6 +19,12 @@ export class UserRepository {
     where: Prisma.UserWhereUniqueInput,
   ): Promise<UserWithoutPassword | null> {
     return this.prisma.user.findUnique({ where, omit: { password: true } });
+  }
+
+  async findOneWithPassword(
+    where: Prisma.UserWhereUniqueInput,
+  ): Promise<User | null> {
+    return this.prisma.user.findUnique({ where });
   }
 
   async delete(
