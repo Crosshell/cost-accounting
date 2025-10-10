@@ -1,46 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { Category } from './entities/category';
-import { CreateCategoryDto } from './dto/create-category.dto';
+import { Prisma, Category } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class CategoryRepository {
-  private categories: Category[] = [];
+  constructor(private readonly prisma: PrismaService) {}
 
-  getAll(): Category[] {
-    return this.categories;
+  async findMany(where: Prisma.CategoryWhereInput): Promise<Category[]> {
+    return this.prisma.category.findMany({ where });
   }
 
-  getById(id: string): Category | string {
-    const category = this.categories.find((category) => category.id == id);
-
-    if (!category) {
-      return `Category with id: ${id} not found`;
-    }
-
-    return category;
+  async findOne(
+    where: Prisma.CategoryWhereUniqueInput,
+  ): Promise<Category | null> {
+    return this.prisma.category.findUnique({ where });
   }
 
-  create(dto: CreateCategoryDto): Category {
-    const category: Category = {
-      id: this.categories.length + 1,
-      name: dto.name,
-    };
-
-    this.categories.push(category);
-
-    return category;
+  async create(data: Prisma.CategoryCreateInput): Promise<Category> {
+    return this.prisma.category.create({ data });
   }
 
-  deleteById(id: string): string {
-    const categoryIndex = this.categories.findIndex(
-      (category) => category.id == id,
-    );
-
-    if (categoryIndex !== -1) {
-      this.categories.splice(categoryIndex, 1);
-      return 'Category deleted successfully';
-    }
-
-    return `Category with id: ${id} not found`;
+  async delete(where: Prisma.CategoryWhereUniqueInput): Promise<Category> {
+    return this.prisma.category.delete({ where });
   }
 }

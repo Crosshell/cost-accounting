@@ -1,8 +1,11 @@
-# Cost Accounting
+# Cost Accounting v3.0.0
 A Node.js application for managing and tracking cost accounting data
 
-## Prerequisites
+## Lab Assignment Variant
+- <b>Calculation:</b> `32 mod 3 = 2`
+- <b>Variant: 2. Custom Expense Categories</b>
 
+## Prerequisites
 Choose one of the following options:
 
 ### Option 1: Local Development
@@ -27,6 +30,13 @@ cd cost-accounting
 
 ```dotenv
 PORT=8070
+
+DATABASE_USER=postgres
+DATABASE_PASSWORD=postgres
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_NAME=name_of_database
+DATABASE_URL="postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}"
 ```
 
 ### Running Locally
