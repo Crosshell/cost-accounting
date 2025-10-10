@@ -3,15 +3,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { User } from '@prisma/client';
 import { UserRepository } from './user.repository';
+import { RegisterDto } from '../auth/dto/register.dto';
+import * as bcrypt from 'bcrypt';
+import { UserWithoutPassword } from './types/user-without-password';
 
 @Injectable()
 export class UserService {
   constructor(readonly repository: UserRepository) {}
 
-  async findOne(id: string): Promise<User> {
+  async findOne(id: string): Promise<UserWithoutPassword> {
     const user = await this.repository.findOne({ id });
 
     if (!user) {
@@ -21,11 +22,19 @@ export class UserService {
     return user;
   }
 
-  async create(dto: CreateUserDto): Promise<User> {
-    return this.repository.create(dto);
+  async create(dto: RegisterDto): Promise<UserWithoutPassword> {
+    const user = await this.repository.findOne({ username: dto.username });
+
+    if (user) {
+      throw new BadRequestException('User with this username already exists');
+    }
+
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+
+    return this.repository.create({ ...dto, password: hashedPassword });
   }
 
-  async delete(id: string): Promise<User> {
+  async delete(id: string): Promise<UserWithoutPassword> {
     const user = await this.repository.findOne({ id });
 
     if (!user) {
@@ -35,7 +44,7 @@ export class UserService {
     return this.repository.delete({ id });
   }
 
-  async getAll(): Promise<User[]> {
+  async getAll(): Promise<UserWithoutPassword[]> {
     return this.repository.getAll();
   }
 }

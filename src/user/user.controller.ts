@@ -1,37 +1,27 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseUUIDPipe,
-  Post,
-} from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { Controller, Delete, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { UserService } from './user.service';
-import { User } from '@prisma/client';
+import { UserWithoutPassword } from './types/user-without-password';
 
 @Controller()
 export class UserController {
   constructor(private readonly service: UserService) {}
 
   @Get('user/:id')
-  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<User> {
+  async findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<UserWithoutPassword> {
     return this.service.findOne(id);
   }
 
   @Delete('user/:id')
-  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<User> {
+  async delete(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<UserWithoutPassword> {
     return this.service.delete(id);
   }
 
-  @Post('user')
-  async create(@Body() dto: CreateUserDto): Promise<User> {
-    return this.service.create(dto);
-  }
-
   @Get('users')
-  async getAll(): Promise<User[]> {
+  async getAll(): Promise<UserWithoutPassword[]> {
     return this.service.getAll();
   }
 }
