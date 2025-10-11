@@ -19,7 +19,12 @@ export class RecordService {
   ) {}
 
   async create(dto: CreateRecordDto): Promise<Record> {
-    await this.userService.findOne(dto.userId);
+    const user = await this.userService.findOne({ id: dto.userId });
+
+    if (!user) {
+      throw new BadRequestException(`User with id: ${dto.userId} not found`);
+    }
+
     const category = await this.categoryService.findOne(dto.categoryId);
 
     if (category.userId && category.userId !== dto.userId) {

@@ -1,4 +1,11 @@
-import { Controller, Delete, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserWithoutPassword } from './types/user-without-password';
 
@@ -10,7 +17,13 @@ export class UserController {
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<UserWithoutPassword> {
-    return this.service.findOne(id);
+    const user = await this.service.findOne({ id });
+
+    if (!user) {
+      throw new NotFoundException(`User with id: ${id} not found`);
+    }
+
+    return user;
   }
 
   @Delete('user/:id')

@@ -1,30 +1,24 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { RegisterDto } from '../auth/dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import { UserWithoutPassword } from './types/user-without-password';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
   constructor(readonly repository: UserRepository) {}
 
-  async findOneWithPassword(id: string): Promise<User | null> {
-    return this.repository.findOneWithPassword({ id });
+  async findOneWithPassword(
+    where: Prisma.UserWhereUniqueInput,
+  ): Promise<User | null> {
+    return this.repository.findOneWithPassword(where);
   }
 
-  async findOne(id: string): Promise<UserWithoutPassword> {
-    const user = await this.repository.findOne({ id });
-
-    if (!user) {
-      throw new NotFoundException(`User with id: ${id} not found`);
-    }
-
-    return user;
+  async findOne(
+    where: Prisma.UserWhereUniqueInput,
+  ): Promise<UserWithoutPassword | null> {
+    return this.repository.findOne(where);
   }
 
   async create(dto: RegisterDto): Promise<UserWithoutPassword> {
